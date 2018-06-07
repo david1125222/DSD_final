@@ -1,0 +1,324 @@
+###################################################################
+
+# Created by write_script -format dctcl on Mon Jul  1 05:24:48 2013
+
+###################################################################
+
+# Set the current_design #
+current_design PL_CPU
+
+set_units -time ns -resistance kOhm -capacitance pF -voltage V -current mA
+set_operating_conditions -max slow -max_library slow\
+                         -min fast -min_library fast
+set_wire_load_model -name tsmc18_wl10 -library fast
+set_max_area 500000
+set_local_link_library {fast.db,slow.db,tpz973gvtc.db,tpz973gvbc.db}
+set_fix_multiple_port_nets -all -buffer_constants
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports clk]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports rst]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[31]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[30]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[29]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[28]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[27]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[26]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[25]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[24]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[23]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[22]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[21]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[20]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[19]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[18]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[17]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[16]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[15]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[14]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[13]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[12]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[11]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[10]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[9]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[8]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[7]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[6]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[5]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[4]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[3]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[2]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[1]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {IF_Instruction[0]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[15]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[14]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[13]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[12]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[11]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[10]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[9]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[8]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[7]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[6]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[5]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[4]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[3]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[2]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[1]}]
+set_driving_cell -lib_cell DFFX2 -library slow -dont_scale -no_design_rule     \
+[get_ports {MEM_ReadDataOUT[0]}]
+create_clock [get_ports clk]  -period 100  -waveform {50 100}
+set_dont_touch_network [get_clocks clk]
+set_fix_hold [get_clocks clk]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[31]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[31]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[30]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[30]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[29]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[29]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[28]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[28]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[27]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[27]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[26]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[26]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[25]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[25]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[24]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[24]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[23]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[23]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[22]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[22]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[21]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[21]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[20]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[20]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[19]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[19]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[18]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[18]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[17]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[17]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[16]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[16]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[15]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[15]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[14]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[14]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[13]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[13]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[12]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[12]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[11]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[11]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[10]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[10]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[9]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[9]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[8]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[8]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[7]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[7]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[6]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[6]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[5]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[5]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[4]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[4]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[3]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[3]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[2]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[2]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[1]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[1]}]
+set_input_delay -clock clk  -max 1  [get_ports {IF_Instruction[0]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {IF_Instruction[0]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[15]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[15]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[14]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[14]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[13]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[13]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[12]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[12]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[11]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[11]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[10]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[10]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[9]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[9]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[8]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[8]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[7]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[7]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[6]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[6]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[5]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[5]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[4]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[4]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[3]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[3]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[2]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[2]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[1]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[1]}]
+set_input_delay -clock clk  -max 1  [get_ports {MEM_ReadDataOUT[0]}]
+set_input_delay -clock clk  -min 0.2  [get_ports {MEM_ReadDataOUT[0]}]
+set_input_delay -clock clk  -max 1  [get_ports rst]
+set_input_delay -clock clk  -min 0.2  [get_ports rst]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[15]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[15]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[14]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[14]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[13]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[13]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[12]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[12]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[11]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[11]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[10]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[10]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[9]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[9]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[8]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[8]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[7]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[7]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[6]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[6]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[5]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[5]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[4]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[4]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[3]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[3]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[2]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[2]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[1]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[1]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_WriteData[0]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_WriteData[0]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[15]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[15]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[14]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[14]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[13]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[13]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[12]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[12]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[11]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[11]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[10]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[10]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[9]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[9]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[8]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[8]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[7]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[7]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[6]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[6]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[5]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[5]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[4]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[4]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[3]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[3]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[2]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[2]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[1]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[1]}]
+set_output_delay -clock clk  -max 1  [get_ports {MEM_ADDRIN[0]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {MEM_ADDRIN[0]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[15]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[15]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[14]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[14]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[13]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[13]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[12]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[12]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[11]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[11]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[10]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[10]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[9]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[9]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[8]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[8]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[7]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[7]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[6]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[6]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[5]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[5]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[4]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[4]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[3]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[3]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[2]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[2]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[1]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[1]}]
+set_output_delay -clock clk  -max 1  [get_ports {PC_INST[0]}]
+set_output_delay -clock clk  -min 0.1  [get_ports {PC_INST[0]}]
+set_output_delay -clock clk  -max 1  [get_ports MEM_MemRead]
+set_output_delay -clock clk  -min 0.1  [get_ports MEM_MemRead]
+set_output_delay -clock clk  -max 1  [get_ports MEM_MemWrite]
+set_output_delay -clock clk  -min 0.1  [get_ports MEM_MemWrite]
+set_output_delay -clock clk  -max 1  [get_ports PC0]
+set_output_delay -clock clk  -min 0.1  [get_ports PC0]
+set_output_delay -clock clk  -max 1  [get_ports PC1]
+set_output_delay -clock clk  -min 0.1  [get_ports PC1]
+set_output_delay -clock clk  -max 1  [get_ports PC2]
+set_output_delay -clock clk  -min 0.1  [get_ports PC2]
+1

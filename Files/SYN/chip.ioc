@@ -1,0 +1,119 @@
+Pad: CORNER0     	   NW  PCORNER
+Pad: PAD_clk     	   N
+Pad: PAD_rst     	   N
+Pad: PAD_PC0     	   N
+Pad: PAD_PC1     	   N
+Pad: PAD_PC2     	   N
+Pad: PAD_INST0   	   N
+Pad: PAD_INST1   	   N
+Pad: PAD_INST2   	   N
+Pad: PAD_INST3   	   N
+Pad: PAD_INST4   	   N
+Pad: PAD_INST5   	   N
+Pad: PAD_INST6   	   N
+Pad: PAD_INST7   	   N
+Pad: PAD_IOVDD1  	   N   PVDD2DGZ
+Pad: PAD_INST8   	   N
+Pad: PAD_INST9   	   N
+Pad: PAD_INST10  	   N
+Pad: PAD_INST11  	   N
+Pad: PAD_INST12  	   N
+Pad: PAD_INST13  	   N
+Pad: PAD_INST14  	   N
+Pad: PAD_INST15  	   N
+Pad: PAD_Ins0  	   N
+Pad: PAD_Ins1  	   N
+Pad: PAD_Ins2  	   N
+Pad: PAD_Ins3  	   N
+Pad: PAD_Ins4  	   N
+
+Pad: CORNER1     	   NE  PCORNER
+Pad: PAD_Ins5     	   E
+Pad: PAD_Ins6     	   E
+Pad: PAD_Ins7     	   E
+Pad: PAD_Ins8     	   E
+Pad: PAD_Ins9     	   E
+Pad: PAD_Ins10     	   E
+Pad: PAD_Ins11     	   E
+Pad: PAD_Ins12     	   E
+Pad: PAD_Ins13     	   E
+Pad: PAD_Ins14     	   E
+Pad: PAD_Ins15     	   E
+Pad: PAD_Ins16     	   E
+Pad: PAD_Ins17     	   E
+Pad: PAD_CoreVSS 	   E   PVSS1DGZ
+Pad: PAD_Ins18     	   E
+Pad: PAD_Ins19     	   E
+Pad: PAD_Ins20     	   E
+Pad: PAD_Ins21     	   E
+Pad: PAD_Ins22     	   E
+Pad: PAD_Ins23     	   E
+Pad: PAD_Ins24     	   E
+Pad: PAD_Ins25     	   E
+Pad: PAD_Ins26     	   E
+Pad: PAD_Ins27     	   E
+Pad: PAD_Ins28     	   E
+Pad: PAD_Ins29     	   E
+Pad: PAD_Ins30     	   E
+
+Pad: CORNER2     	   SE  PCORNER
+Pad: PAD_Ins31	   S 
+Pad: PAD_ReadData0	   S 
+Pad: PAD_ReadData1	   S 
+Pad: PAD_ReadData2	   S 
+Pad: PAD_ReadData3	   S 
+Pad: PAD_ReadData4	   S 
+Pad: PAD_ReadData5	   S 
+Pad: PAD_ReadData6	   S 
+Pad: PAD_ReadData7	   S 
+Pad: PAD_ReadData8	   S 
+Pad: PAD_ReadData9	   S 
+Pad: PAD_ReadData10	   S 
+Pad: PAD_ReadData11	   S
+Pad: PAD_IOVSS1  	   S  	PVSS2DGZ 
+Pad: PAD_ReadData12	   S
+Pad: PAD_ReadData13	   S
+Pad: PAD_ReadData14	   S 
+Pad: PAD_ReadData15	   S
+Pad: PAD_ADDRIN0	   S 
+Pad: PAD_ADDRIN1	   S 
+Pad: PAD_ADDRIN2	   S 
+Pad: PAD_ADDRIN3	   S 
+Pad: PAD_ADDRIN4	   S  
+Pad: PAD_ADDRIN5	   S 
+Pad: PAD_ADDRIN6	   S 
+Pad: PAD_ADDRIN7	   S 
+Pad: PAD_ADDRIN8	   S  
+
+Pad: CORNER3     	   SW  PCORNER
+Pad: PAD_ADDRIN9	   W 
+Pad: PAD_ADDRIN10	   W 
+Pad: PAD_ADDRIN11	   W 
+Pad: PAD_ADDRIN12	   W 
+Pad: PAD_ADDRIN13	   W 
+Pad: PAD_ADDRIN14	   W 
+Pad: PAD_ADDRIN15	   W 
+Pad: PAD_WriteData0	   W 
+Pad: PAD_WriteData1	   W   
+Pad: PAD_WriteData2	   W 
+Pad: PAD_WriteData3	   W 
+Pad: PAD_WriteData4	   W
+Pad: PAD_CoreVDD 	   W   PVDD1DGZ 
+Pad: PAD_WriteData5	   W 
+Pad: PAD_WriteData6	   W 
+Pad: PAD_WriteData7	   W 
+Pad: PAD_WriteData8	   W 
+Pad: PAD_WriteData9	   W 
+Pad: PAD_WriteData10	   W
+Pad: PAD_WriteData11	   W 
+Pad: PAD_WriteData12	   W 
+Pad: PAD_WriteData13	   W 
+Pad: PAD_WriteData14	   W 
+Pad: PAD_WriteData15	   W 
+Pad: PAD_MemRead	   W 
+Pad: PAD_MemWrite	   W  
+
+
+
+
+
