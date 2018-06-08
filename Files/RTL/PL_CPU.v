@@ -15,7 +15,7 @@ module PL_CPU(	clk,rst,PC0,PC1,PC2,
 					);
 input clk,rst;
 output PC0,PC1,PC2;
-wire [31:0] PC;
+wire [31:0] PC,PC_plus_4;
 assign PC0 = PC[0];
 assign PC1 = PC[1];
 assign PC2 = PC[2];
@@ -42,6 +42,8 @@ wire [1:0] ID_ALUop;
 wire [4:0] ID_WriteRegADDR, ID_INS20to16, ID_INS31to11, ID_INS25to21, ID_INS10to6;
 wire [31:0] ID_ALUresult, ID_ReadDataIN, ID_ReadData1, ID_ReadData2;
 wire [31:0] ID_instruction, ID_SignExtend;
+wire [31:0] ID_PC_plus_4;
+wire ID_isJAL;
 //new
 wire [31:0] Reg_S1, Reg_S2, Reg_S3, Reg_S4, Reg_S5, Reg_S6, Reg_S7, Reg_S8;
 //EX
@@ -50,10 +52,13 @@ wire [1:0] EX_ALUop;
 wire [4:0] EX_RsIN,EX_RtIN, EX_RdIN, EX_SHAMTIN, EX_WriteRegOut;
 wire [31:0] EX_ReadData1, EX_ReadData2, EX_ALUResult, EX_WriteDataOUT;
 wire [31:0] EX_SignExtend;
+wire [31:0] EX_PC_plus_4;
+wire EX_isJAL;
 //MEM
 wire MEM_RegWrite, MEM_MemtoReg, MEM_Branch, MEM_ZERO;
 wire [4:0] MEM_WriteREG;
-
+wire [31:0] MEM_PC_plus_4;
+wire MEM_isJAL;
 //WB
 wire [31:0] WB_WriteData;
 //Forward
@@ -69,14 +74,18 @@ Ifetch				u_Ifetch		(			.clk(clk),
 										.PCSrc(Branch_taken),
 										.stall(Stall),
 										.PC(PC),
-										.Last_Inst(last_inst)
+										.Last_Inst(last_inst),
+										.PC_plus_4(PC_plus_4),
+										.Read_data1(ID_ReadData1)
 									);
 IF_IDreg			u_stage1		(			.clk(clk),
 										.rst(rst),										
 										.INST_RegIN(IF_Instruction),
 										.INST_RegOUT(ID_instruction),
 										.stall(Stall),
-										.Branch_taken(Branch_taken)
+										.Branch_taken(Branch_taken),
+										.PC_plus_4IN(PC_plus_4),
+										.PC_plus_4OUT(ID_PC_plus_4)
 									);
 Idecode				u_Idecode		(		.clk(clk),
 										.rst(rst),
@@ -112,7 +121,8 @@ Idecode				u_Idecode		(		.clk(clk),
 										.Reg_S5(Reg_S5), 
 										.Reg_S6(Reg_S6), 
 										.Reg_S7(Reg_S7), 
-										.Reg_S8(Reg_S8)
+										.Reg_S8(Reg_S8),
+										.isJAL(ID_isJAL)
 									);
 ID_EXreg			u_stage2		(			.clk(clk),
 										.rst(rst),										
@@ -149,7 +159,12 @@ ID_EXreg			u_stage2		(			.clk(clk),
 										.Opcode_in(ID_Opcode),
 										.Opcode_out(EX_Opcode),
 										.stall(Stall),
-										.branch_taken(Branch_taken)
+										.branch_taken(Branch_taken),
+										.PC_plus_4IN(ID_PC_plus_4),
+										.PC_plus_4OUT(EX_PC_plus_4),
+										.isJALIN(ID_isJAL),
+										.isJALOUT(EX_isJAL)
+
 									);
 Execute				u_Execute		(	.clk(clk),
 										.rst(rst),
@@ -196,7 +211,11 @@ EX_MEMreg		u_stage3		(	.clk(clk),
 										.ZERO_OUT(MEM_ZERO),
 										.ALU_ResOUT(MEM_ADDRIN),
 										.RT_OUT(MEM_WriteData),
-										.RTD_ADDROUT(MEM_WriteREG)
+										.RTD_ADDROUT(MEM_WriteREG),
+										.PC_plus_4IN(EX_PC_plus_4),
+										.PC_plus_4OUT(MEM_PC_plus_4),
+										.isJALIN(EX_isJAL),
+										.isJALOUT(MEM_isJAL)
 									);
 //memory_access(clk,reset,Branch,MemRead,MemWrite,ZERO,ADDRESS_IN,WRITE_DATA,READ_DATA_OUT,PCSrc,Mem_01,Mem_02,Mem_03,Mem_04,Mem_05);
 memory_access		u_ACCESS		(				.clk(clk),
@@ -217,7 +236,9 @@ MEM_WBreg		u_stage4		(	.clk(clk),
 										.READ_DataOUT(ID_ReadDataIN),
 										.ADDRESS_OUT(ID_ALUresult),
 										.WRITE_RegOUT(ID_WriteRegADDR),
-										.write_data(WB_WriteData)
+										.write_data(WB_WriteData),
+										.isJAL(MEM_isJAL),
+										.PC_plus_4(MEM_PC_plus_4)
 									);
 Forwarding		u_Forwarding		(	
 										.Ai(ForwardA),

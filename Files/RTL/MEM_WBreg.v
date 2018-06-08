@@ -1,10 +1,12 @@
 module MEM_WBreg(clk,rst,RegWrite,MemtoReg,WRITE_REG,READ_DATA,ADDRESS,
 						RegWrite_out,MemtoReg_out,WRITE_RegOUT,READ_DataOUT,ADDRESS_OUT,
-				write_data		);
+				write_data,isJAL,PC_plus_4IN,isJAL		);
 input clk,rst;
 input RegWrite,MemtoReg;
 input [4:0] WRITE_REG;
 input [31:0] READ_DATA,ADDRESS;
+input [31:0] PC_plus_4IN;
+input isJAL;
 output RegWrite_out,MemtoReg_out;
 output [4:0] WRITE_RegOUT;
 output [31:0] READ_DataOUT,ADDRESS_OUT;
@@ -29,8 +31,10 @@ begin
 		READ_DataOUT <= READ_DATA;
 		WRITE_RegOUT <= WRITE_REG;
 		ADDRESS_OUT <= ADDRESS;
-		RegWrite_out <= RegWrite;
+		//RegWrite_out <= RegWrite;
 		MemtoReg_out <= MemtoReg;
+		if(isJAL)RegWrite_out <= PC_plus_4IN;
+		else RegWrite_out <= RegWrite;
 	end
 end
 endmodule

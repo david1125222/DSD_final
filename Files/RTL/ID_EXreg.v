@@ -2,23 +2,27 @@ module ID_EXreg( clk,rst,RS_ADDRIN,RT_ADDRIN,RD_ADDRIN,SHAME_ADDRIN,RS_IN,RT_IN,
 						OFFSET_IN,RegWrite,MemtoReg,Branch,MemRead,MemWrite,RegDst,ALUSrc,ALUop,RS_ADDROUT,
 						RT_ADDROUT,RD_ADDROUT,SHAMT_ADDROUT,RS_OUT,RT_OUT,OFFSET_OUT,ALUop_out,
 						RegWrite_out,MemtoReg_out,Branch_out,MemRead_out,MemWrite_out,RegDst_out,ALUSrc_out,
-						Opcode_in,Opcode_out,stall,branch_taken		//new
+						Opcode_in,Opcode_out,stall,branch_taken,PC_plus_4IN,PC_plus_4OUT,isJALIN,isJALOUT		//new
 						);
 input clk,rst,branch_taken;
 input [4:0] RS_ADDRIN,RT_ADDRIN,RD_ADDRIN,SHAME_ADDRIN;
 input [31:0] RS_IN,RT_IN;
 input [31:0] OFFSET_IN;
+input [31:0] PC_plus_4IN;
 input RegWrite,MemtoReg,Branch,MemRead,MemWrite,RegDst,ALUSrc;
 input [1:0] ALUop;
+input isJALIN;
 output [4:0] RS_ADDROUT,RT_ADDROUT,RD_ADDROUT,SHAMT_ADDROUT;
 output [31:0] RS_OUT,RT_OUT;
 output [31:0] OFFSET_OUT;
+output [31:0] PC_plus_4OUT;
 output RegWrite_out,MemtoReg_out,Branch_out,MemRead_out,MemWrite_out,RegDst_out,ALUSrc_out;
 output [1:0] ALUop_out; 
+output isJALOUT;
 reg [4:0] RS_ADDROUT,RT_ADDROUT,RD_ADDROUT,SHAMT_ADDROUT;
 reg [31:0] RS_OUT,RT_OUT;
 reg [31:0] OFFSET_OUT;
-reg RegWrite_out,MemtoReg_out,Branch_out,MemRead_out,MemWrite_out,RegDst_out,ALUSrc_out;
+reg RegWrite_out_0,MemtoReg_out,Branch_out,MemRead_out,MemWrite_out,RegDst_out,ALUSrc_out;
 reg [1:0] ALUop_out;
 //new
 input	[5:0]	Opcode_in;
@@ -45,7 +49,9 @@ begin
 		ALUop_out <= 2'b0;
 		SHAMT_ADDROUT <= 0;
 		RS_ADDROUT <= 0;
-		Opcode_out <= 6'b0;		//new
+		Opcode_out <= 6'b0;	
+		PC_plus_4OUT <= 32'b0;
+		isJALOUT <= 0;	//new
 	end
 	else if(stall || branch_taken) 
 	begin
@@ -64,7 +70,9 @@ begin
 		ALUop_out <= 2'b0;
 		SHAMT_ADDROUT <= 0;
 		RS_ADDROUT <= 0;
-		Opcode_out <= 6'b0;		//new
+		Opcode_out <= 6'b0;
+		PC_plus_4OUT <= 32'b0;
+		isJALOUT <= 0;		//new
 	end
 	else begin
 		OFFSET_OUT <= OFFSET_IN;
@@ -82,7 +90,9 @@ begin
 		ALUop_out <= ALUop;
 		SHAMT_ADDROUT <= SHAME_ADDRIN;
 		RS_ADDROUT <= RS_ADDRIN;
-		Opcode_out <= Opcode_in;	//new
+		Opcode_out <= Opcode_in;	
+		PC_plus_4OUT <= PC_plus_4IN;
+		isJALOUT <= isJALIN;  //new
 	end
 end
 endmodule

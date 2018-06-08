@@ -5,7 +5,7 @@ module Idecode(	clk, rst, WRITE_RegADDR, Instruction,MemtoReg_in , RegWrite_in, 
 			Reg_S1, Reg_S2, Reg_S3, Reg_S4, Reg_S5, Reg_S6, Reg_S7, Reg_S8,
 			RegWrite, MemtoReg, Branch, MemRead, MemWrite, RegDst, ALUop, ALUSrc,
 			Jump, read_data1, read_data2, Sign_extend, INS_25to21, INS_20to16, INS_15to11, INS_10to6, stall, branch_taken ,
-			Opcode 	//new	pass next stage	
+			Opcode, isJAL 	//new	pass next stage	
 		);
 	
 	parameter MIP_BUS = 32;
@@ -32,6 +32,7 @@ module Idecode(	clk, rst, WRITE_RegADDR, Instruction,MemtoReg_in , RegWrite_in, 
 	//new
 	input branch_taken;
 	output [5:0]	Opcode;	
+	output isJAL;
 
 	reg	[MIP_BUS-1:0]	register_file	[NUM_REG-1:0];
 	reg	[MIP_BUS-1:0]	write_data;
@@ -40,14 +41,17 @@ module Idecode(	clk, rst, WRITE_RegADDR, Instruction,MemtoReg_in , RegWrite_in, 
 	//new
 //	wire			Compare;
 	wire	[1:0]		ALUop_muxin;
+	wire    [5:0]       func;
 //	wire			and1,and2;
 	//new
 	assign Opcode = Instruction [31:26];
+	assign func   = Instruction [5:0];
 	wire	Branch_muxin, RegDst_muxin, ALUSrc_muxin, MemtoReg_muxin, RegWrite_muxin, MemRead_muxin, MemWrite_muxin;
 
 	control	CTRL	(		.clk		(clk),
 						.rst		(rst),
 						.Opcode	(Instruction[31:26]),
+						.func   (func),
 						.ALUop		(ALUop_muxin),
 						.Branch	(Branch_muxin),
 						.Jump		(Jump),
@@ -56,7 +60,9 @@ module Idecode(	clk, rst, WRITE_RegADDR, Instruction,MemtoReg_in , RegWrite_in, 
 						.MemtoReg	(MemtoReg_muxin),
 						.RegWrite	(RegWrite_muxin),
 						.MemRead	(MemRead_muxin),
-						.MemWrite	(MemWrite_muxin)										
+						.MemWrite	(MemWrite_muxin),
+						.isJAL      (isJAL),
+						.isJR       (isJR)										
 				);
 	Registers u_register	(		.Read_register1	(Instruction[25:21]),
 						.Read_register2	(Instruction[20:16]),
@@ -73,7 +79,8 @@ module Idecode(	clk, rst, WRITE_RegADDR, Instruction,MemtoReg_in , RegWrite_in, 
 						.Reg_S6		(Reg_S6), 
 						.Reg_S7		(Reg_S7), 
 						.Reg_S8		(Reg_S8),
-						.rst			(rst)
+						.rst			(rst),
+						.isJAL      (isJAL) 
 				);
 	//new	
 	ID_MUX			u_IDMUX (
