@@ -11,7 +11,7 @@ output isJAL,isJR;
 
 reg	[1:0] ALUop;
 reg	RegDst,ALUSrc,MemtoReg,RegWrite,MemRead,MemWrite;
-reg	Branch,Jump;
+reg	Branch,Jump,isJAL,isJR;
 
 
 
@@ -26,6 +26,7 @@ reg	Branch,Jump;
 `define J 6'b000010
 `define JAL 6'b000011
 `define JR  6'b001000
+`define JALR 6'b001001
 /*
 wire [1:0] ALUop;
 wire RegDst = (Opcode ==`R_format) ? 1 : 0;
@@ -41,7 +42,7 @@ assign ALUop[1] = (Opcode ==`R_format) ? 1 : 0;
 assign ALUop[0] = (Opcode ==`Beq) ? 1: 0;
 */
 
-assign isJR = (Opcode==6'b0) && (func==`JR);
+//assign isJR = (Opcode==6'b0) && (func==`JR);
 always@(*) begin
 	case (Opcode)
 		`R_format:begin
@@ -176,5 +177,33 @@ always@(*) begin
 			isJAL = 0;
 			end
 	endcase
+	if((Opcode==6'b0) && (func==`JR))begin
+		RegDst = 0;
+		ALUSrc = 0;
+		MemtoReg = 0;
+		RegWrite = 0;
+		MemRead = 0;
+		MemWrite = 0;	
+		Branch = 0;
+		Jump = 0;
+		ALUop = 2'b00;
+		isJAL = 0;
+		isJR = 1;
+	end
+	else if ((Opcode==6'b0) && (func==`JALR))begin
+		RegDst = 0;
+		ALUSrc = 0;
+		MemtoReg = 0;
+		RegWrite = 1;
+		MemRead = 0;
+		MemWrite = 0;	
+		Branch = 0;
+		Jump = 0;
+		ALUop = 2'b00;
+		isJAL = 1;
+		isJR = 1;
+	end
+	else isJR = 0;
+
 end
 endmodule
