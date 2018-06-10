@@ -1,3 +1,7 @@
+`include "MIPS_Pipeline.v"
+`include "L1cache.v"
+`include "I_L1cache.v"
+
 // Top module of your design, you cannot modify this module!!
 module CHIP (	clk,
 				rst_n,
@@ -64,23 +68,7 @@ wire [31:0] DCACHE_rdata;
 	// 3. instruction cache
 
 
-	PL_CPU i_MIP(	
-		.clk(clk),
-		.rst(rst_n),
-		.PC_INST(ICACHE_addr),
-		.IF_Instruction(ICACHE_rdata),		//new
-		.MEM_ReadDataOUT(DCACHE_rdata), 
-		.MEM_ADDRIN(DCACHE_addr), 
-		.MEM_WriteData(DCACHE_wdata), 
-		.MEM_MemRead(DCACHE_ren), 
-		.MEM_MemWrite(DCACHE_wen),
-		.ICACHE_ren(ICACHE_ren),
-		.ICACHE_wen(ICACHE_wen),
-		.ICACHE_wdata(ICACHE_wdata),
-		.ICACHE_stall(ICACHE_stall),
-		.DCACHE_stall(DCACHE_stall)
-					);
-	/*MIPS_Pipeline i_MIPS(
+	MIPS_Pipeline i_MIPS(
 		// control interface
 		clk, 
 		rst_n,
@@ -99,14 +87,13 @@ wire [31:0] DCACHE_rdata;
 		DCACHE_stall,
 		DCACHE_rdata
 	);
-	*/
 	
-	cache D_cache(
+	L1cache D_cache(
 		clk,
 		~rst_n,
 		DCACHE_ren,
 		DCACHE_wen,
-		DCACHE_addr,
+		DCACHE_addr,I_cache
 		DCACHE_wdata,
 		DCACHE_stall,
 		DCACHE_rdata,
@@ -118,7 +105,7 @@ wire [31:0] DCACHE_rdata;
 		mem_ready_D
 	);
 
-	cache I_cache(
+	I_L1cache I_cache(
 		clk,
 		~rst_n,
 		ICACHE_ren,
@@ -134,5 +121,7 @@ wire [31:0] DCACHE_rdata;
 		mem_wdata_I,
 		mem_ready_I
 	);
+
+	
 endmodule
 
