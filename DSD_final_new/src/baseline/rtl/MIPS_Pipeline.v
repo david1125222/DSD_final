@@ -71,15 +71,13 @@ module MIPS_Pipeline (
 	reg [31:0] ReadDataMem;
 	reg [31:0] PCin_ID, PCin_EX, PCin_MEM, JumpAddr_ID, BranchAddr_ID, Branch_result_ID, ICACHE_addr_ID, ICACHE_addr_MEM, ICACHE_addr_EX;
 	reg [31:0] ICACHE_addr_next;
-	wire [31:0] addr_plus_four;
 	wire [4:0] amount;
 	wire stall;
 	reg branch_enable;
 	reg [2:0]Forward_ID, Forward_EX;
 
 	reg [15:0] all_time, miss_time, down_time;
-	
-	assign addr_plus_four = ICACHE_addr + 32'd4;
+
 	assign amount = Sa_EX;
 
 
@@ -667,6 +665,13 @@ module MIPS_Pipeline (
 		
 		
 	end
+
+	/*
+	always@(*)			// Branch prediction
+	begin
+		
+	end
+	*/
 	
 //=======================sequential part======================
 
