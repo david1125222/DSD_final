@@ -40,17 +40,21 @@ module L1cache(
 //==== wire/reg definition ================================
 
 	reg [127:0] block;
-	reg [127:0] block_save [7:0] ;
-	reg [127:0] data; 	//cache
-	reg [7:0] valid_save,dirty_save;
+	reg [127:0] block_save_a [3:0];
+    reg [127:0] block_save_b [3:0];
+	reg [3:0] valid_save_a,dirty_save_a,valid_save_b,dirty_save_b;
 	reg valid,dirty;
-	reg [24:0] tag;
-	reg [24:0] tag_save [7:0];
+	reg [25:0] tag;
+	reg [25:0] tag_save_a [3:0];
+	reg [25:0] tag_save_b [3:0];
+    reg lru;
+    reg [3:0] lru_save;
 
 	reg [1:0] state, next_state;
 
-	wire [2:0] index;
+	wire [1:0] index;
 	wire hit;
+    wire choose_a, choose_b;
 
 	integer i;
 	integer counter, next_counter, miss, next_miss;    
@@ -60,11 +64,12 @@ module L1cache(
 //==== combinational circuit ==============================
 
 
-	assign index = proc_addr[4:2];
-	assign hit = valid && (proc_addr[29:5] == tag);
+	assign index = proc_addr[3:2];
+	assign hit = (choose_a || choose_b);
+    assign choose_a = valid_save_a[index] && (proc_addr[29:4] == tag_save_a[index]);
+    assign choose_b = valid_save_b[index] && (proc_addr[29:4] == tag_save_b[index]);
 
-
-	always @(*) begin	//for state
+	always @(*) begin	//FSM
 	next_counter = counter;
 	next_miss = miss;
 		case(state) 
@@ -85,7 +90,7 @@ module L1cache(
 				end
 			end
 
-			2'b01:begin
+			2'b01:begin //Never 
 				next_counter = counter;
 				next_miss = miss;
 				next_state = 2'b00;
@@ -114,6 +119,16 @@ module L1cache(
 		endcase
 	end
 
+    always @(*) begin //for lru algorithm(optimal)
+        // TODO
+        if(hit) begin
+            lru = choose_b;
+        end
+        else begin
+            lru = ~lru_save[index];
+        end
+    end
+
 	always @(*) begin //for output
 		case(proc_addr[1:0])
 			2'd0: proc_rdata = block[31:0];
@@ -131,11 +146,10 @@ module L1cache(
 
 
 	always @(*)begin	//to write data to cache
-			valid = valid_save[index];
-			dirty = dirty_save[index];
-			block = block_save[index];
-			tag = tag_save[index];
-			
+			valid = valid_save_a[index] || valid_save_b[index];
+            dirty = dirty_save_a[index] && dirty_save_b[index];
+			block = (choose_a) ? block_save_a[index] : block_save_b[index];
+			tag = (choose_a) ? tag_save_a[index] : tag_save_b[index];
 
 			if(hit) begin
 				if(~state[1] && ~state[0] && proc_write) begin
@@ -162,25 +176,40 @@ module L1cache(
 	always@( posedge clk or posedge proc_reset ) begin
 	    if( proc_reset ) begin
 	    	state <= 2'b00;
-			valid_save <= 8'b0;
-			dirty_save <= 8'b0; 
+			valid_save_a <= 4'b0;
+			dirty_save_a <= 4'b0;
+			valid_save_b <= 4'b0;
+			dirty_save_b <= 4'b0;
+            lru_save <= 4'b0;
 			miss <= 0;
 			counter <= 0;
 
-			for(i = 0; i <8; i = i+1) begin
-			tag_save[i] <= 25'b0;  
-			block_save[i] <= 128'b0;
+			for(i = 0; i <4; i = i+1) begin
+			tag_save_a[i] <= 26'b0;  
+			block_save_a[i] <= 128'b0;
+			tag_save_b[i] <= 26'b0;  
+			block_save_b[i] <= 128'b0;
 			end
 		end
 	    else begin
 	    	state <= next_state;
 	    	miss <= next_miss;
 	    	counter <= next_counter;
-			valid_save[index] <= valid;
-			dirty_save[index] <= dirty;
-			tag_save[index] <= tag;
-			block_save[index] <= block;
-
+            lru_save[index] <= lru;
+            case(~lru)
+                1'b0: begin
+                    valid_save_a[index] <= valid;
+                    dirty_save_a[index] <= dirty;
+                    tag_save_a[index] <= tag;
+                    block_save_a[index] <= block;
+                end
+                1'b1: begin
+                    valid_save_b[index] <= valid;
+                    dirty_save_b[index] <= dirty;
+                    tag_save_b[index] <= tag;
+                    block_save_b[index] <= block;
+                end
+            endcase
 	    end
 	end
 
