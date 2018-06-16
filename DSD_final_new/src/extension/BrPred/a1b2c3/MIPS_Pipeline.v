@@ -306,7 +306,7 @@ module MIPS_Pipeline (
 		if ( (IR[31:26] == 6'd4) && branch_enable )	//beq
 		begin
 			ICACHE_addr_next = beq_addr_ID;
-			ID_FLUSH_next = 1'b1;
+			//ID_FLUSH_next = 1'b1;
 		end
 		
 		else if ( (IR[31:26] == 6'd2)  || (IR[31:26] == 6'd3) )		//j jal
@@ -314,7 +314,7 @@ module MIPS_Pipeline (
 
 			PCin_ID = {ICACHE_addr , 2'b0} ;
 			ICACHE_addr_next = JumpAddr_ID;
-			ID_FLUSH_next = 1'b1;
+			//ID_FLUSH_next = 1'b1;
 		end
 		
 		else if ( (IR[31:26] == 6'd0) && (IR[5:0] == 6'd9) )		//jalr
@@ -322,7 +322,7 @@ module MIPS_Pipeline (
 
 			PCin_ID = {ICACHE_addr , 2'b0} ;
 			ICACHE_addr_next = jalr_addr_ID;
-			ID_FLUSH_next = 1'b1;
+			//ID_FLUSH_next = 1'b1;
 		
 		end
 		
@@ -330,29 +330,55 @@ module MIPS_Pipeline (
 		begin
 
 			ICACHE_addr_next = jr_addr_ID;
-			ID_FLUSH_next = 1'b1;
+			//ID_FLUSH_next = 1'b1;
 		end
 		
 		else
 		begin
-			ICACHE_addr_next = PCin_ID;
-			ID_FLUSH_next = 1'b0;
+			ICACHE_addr_next = PC_plus_4_next;
+			//ID_FLUSH_next = 1'b0;
 		end
 	end
-	always@(*)begin		//branch prediction
-		beq_addr_IF = ICACHE_addr + { {14{ICACHE_rdata[15]}} , ICACHE_rdata[15:0] , 2'b00} - 32'd4;
-		if(FSM && ICACHE_rdata[31:26] == 6'd4)begin
-			MUX_Branch_Predict =  beq_addr_IF;
-		end
-		else begin
-			MUX_Branch_Predict = ICACHE_addr;
-		end
-		if(Comparator)begin
-			ICACHE_addr_next = 
-		end
-		else begin
-			ICACHE_addr_next = MUX_Branch_Predict
+	/////////////////////////////////////////////////////////////////////////////
+	wire [31:0] ICACHE_addr_next_real;
+	wire [31:0] beq_addr_IF,PCin_IF;
+	wire [31:0] PC_plus_4;
+	reg  [31:0] PC_plus_4_next;
+	wire branch_prediction, predict_miss;
+	reg branch_prediction_ID;
 
+	assign predict_miss = !((branch_prediction_ID == (Read_register_1==Read_register_2)) && (IR[31:26] == 6'd4));
+
+	predict_unit pre(
+    	.predict_miss(predict_miss),
+    	.branch_IF((ICACHE_rdata[31:26] == 6'd4) ),
+    	.stall(stall),
+    	.clk(clk),
+    	.rst_n(rst_n),
+    	.branch_prediction(branch_prediction)
+    );
+	
+	always@(*)begin		//branch prediction
+		beq_addr_IF = PCin_ID + { {14{ICACHE_rdata[15]}} , ICACHE_rdata[15:0] , 2'b00} ;
+		PC_plus_4={ICACHE_addr , 2'b0} + 32'd4;
+		
+		if((ICACHE_rdata[31:26] == 6'd4) && branch_enable && branch_prediction)begin
+		  	PCin_IF=beq_addr_IF;
+		end
+		else begin
+		  	PCin_IF=PC_plus_4;
+		end
+
+		if(predict_miss)begin
+			ICACHE_addr_next_real=ICACHE_addr_next;
+			ID_FLUSH_next = 1'b1;
+		end
+		else begin
+		  	ICACHE_addr_next_real=PCin_IF;
+			ID_FLUSH_next = 1'b0;
+		end
+
+	
 	
 	always@(*)										//ID-PART   AND Sa
 	begin
@@ -783,8 +809,10 @@ begin
 		for (i=1;i<32;i=i+1)
 		Register[i] <= Register_next[i];
 
-		ICACHE_addr	<= (stall || hazard_lw) ? ICACHE_addr :  ICACHE_addr_next[31:2] ;
+		ICACHE_addr	<= (stall || hazard_lw) ? ICACHE_addr :  ICACHE_addr_next_real[31:2] ;
 		IR <= (stall || hazard_lw) ? IR :  (ID_FLUSH_next) ? 32'd0 : ICACHE_rdata;
+		PC_plus_4_next<=PC_plus_4;
+		branch_prediction_ID<=branch_prediction;
 		IR_EX_5 <= (stall) ? IR_EX_5 : IR[5:0];	
 		Jump_EX <= (stall) ? Jump_EX :(hazard_lw) ? 1'b0 : Jump_ID;
 	
@@ -835,6 +863,123 @@ begin
 	
 	end
 end
+
+
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module predict_unit(
+    predict_miss,
+    branch_IF,
+    stall,
+    clk,
+    rst_n,
+    branch_prediction
+);
+
+    input       predict_miss,branch_IF,stall,clk,rst_n;
+    output      branch_prediction;
+    reg         branch_prediction;
+
+    reg [1:0] current_state, next_state;
+
+
+    `define NOT_TAKEN_1     2'b00
+    `define NOT_TAKEN_2     2'b01
+    `define TAKEN_1         2'b10
+    `define TAKEN_2         2'b11
+
+    always@(posedge clk)
+        current_state <= next_state;
+
+    always@(current_state or rst_n or predict_miss or branch_IF or stall)begin
+        if(rst_n) begin
+            next_state=`NOT_TAKEN_1;
+            branch_prediction=0;  
+        end
+        else begin
+            case (current_state)
+              `NOT_TAKEN_1:begin
+                if(stall || !branch_IF)
+                    next_state=`NOT_TAKEN_1;  
+                else if(predict_miss)
+                    next_state=`NOT_TAKEN_2;
+                else
+                    next_state=`NOT_TAKEN_1; 
+              end
+              `NOT_TAKEN_2:begin
+                if(stall || !branch_IF)
+                    next_state=`NOT_TAKEN_2;  
+                else if(predict_miss)
+                    next_state=`TAKEN_1;
+                else
+                    next_state=`NOT_TAKEN_1;
+              end
+              `TAKEN_1:begin
+                if(stall || !branch_IF)
+                    next_state=`TAKEN_1;  
+                else if(predict_miss)
+                    next_state=`TAKEN_2;
+                else
+                    next_state=`TAKEN_1;
+              end
+              `TAKEN_2:begin
+                if(stall || !branch_IF)
+                    next_state=`TAKEN_2;  
+                else if(predict_miss)
+                    next_state=`NOT_TAKEN_1;
+                else
+                    next_state=`TAKEN_1;
+              end
+            endcase
+
+        end
+    end
+    
+    always@(current_state or rst_n or predict_miss or branch_IF or stall)begin
+            case (current_state)
+              `NOT_TAKEN_1:begin
+                branch_prediction=0;
+              end
+              `NOT_TAKEN_2:begin
+                if(stall || !branch_IF)
+                    branch_prediction=1'b0;  
+                else if(predict_miss)
+                    branch_prediction=1'b1;
+                else
+                    branch_prediction=1'b0;
+              end
+              `TAKEN_1:begin
+                branch_prediction=1'b1;
+              end
+              `TAKEN_2:begin
+                if(stall || !branch_IF)
+                    branch_prediction=1'b1;  
+                else if(predict_miss)
+                    branch_prediction=1'b0;
+                else
+                    branch_prediction=1'b1;
+              end 
+            endcase
+
+    end
+
+
 
 
 endmodule
