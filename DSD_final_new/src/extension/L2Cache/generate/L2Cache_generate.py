@@ -71,7 +71,7 @@ def param_p1p2p3(nb):
 
 # In[3]:
 
-nb = int(sys.argv[1])
+nb = 30
 
 # nb = 20
 # nb = 16
