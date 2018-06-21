@@ -77,25 +77,8 @@ module MIPS_Pipeline (
 	reg [2:0]Forward_ID, Forward_EX;
 
 	reg [15:0] all_time, miss_time, down_time;
-	wire R1_equal_R2;
-	assign R1_equal_R2 = (ReadData_1_ID==ReadData_2_ID);
 
-
-
-	reg  [31:0] PC_plus_4_next,PCin_IF,ICACHE_addr_next_real,PC_plus_4,beq_addr_IF;
-	wire branch_prediction, predict_miss,predict_miss_2;
-	reg branch_prediction_ID;
-	wire [31:0] register_1_data,register_7_data,register_29_data;
-	
-	assign register_1_data = Register[1];
-	assign register_7_data = Register[7];
-	assign register_29_data = Register[29];
-
-
-	assign predict_miss = (((branch_prediction_ID ^ branch_enable) && (IR[31:26] == 6'd4) ) || ( (IR[31:26] == 6'd2)  || (IR[31:26] == 6'd3) ) ||  ( (IR[31:26] == 6'd0) && (IR[5:0] == 6'd9) ) || ( (IR[31:26] == 6'd0) && (IR[5:0] == 6'd8) ));
-	assign predict_miss_2=((branch_prediction_ID ^ branch_enable) && (IR[31:26] == 6'd4)) ;
 	assign amount = Sa_EX;
-	
 
 
 	assign stall =  ICACHE_stall || DCACHE_stall ;
@@ -316,7 +299,7 @@ module MIPS_Pipeline (
 		JumpAddr_ID = { PCin_ID[31:28] , IR[25:0] , 2'b00};
 		jalr_addr_ID = ReadData_1_ID;
 
-	 
+		beq_addr_ID = PCin_ID + { {14{IR[15]}} , IR[15:0] , 2'b00} - 32'd4;
 		
 		jr_addr_ID = ReadData_1_ID;
 	
@@ -357,14 +340,19 @@ module MIPS_Pipeline (
 		end
 	end
 	/////////////////////////////////////////////////////////////////////////////
+	wire [31:0] ICACHE_addr_next_real;
+	wire [31:0] beq_addr_IF,PCin_IF;
+	wire [31:0] PC_plus_4;
+	reg  [31:0] PC_plus_4_next;
+	wire branch_prediction, predict_miss;
+	reg branch_prediction_ID;
 
-
-
+	assign predict_miss = !((branch_prediction_ID == (Read_register_1==Read_register_2)) && (IR[31:26] == 6'd4));
 
 	predict_unit pre(
-    	.predict_miss(predict_miss_2),
-    	.branch_IF((IR[31:26] == 6'd4) ),
-    	.stall(stall || hazard_lw),
+    	.predict_miss(predict_miss),
+    	.branch_IF((ICACHE_rdata[31:26] == 6'd4) ),
+    	.stall(stall),
     	.clk(clk),
     	.rst_n(rst_n),
     	.branch_prediction(branch_prediction)
@@ -374,7 +362,7 @@ module MIPS_Pipeline (
 		beq_addr_IF = PCin_ID + { {14{ICACHE_rdata[15]}} , ICACHE_rdata[15:0] , 2'b00} ;
 		PC_plus_4={ICACHE_addr , 2'b0} + 32'd4;
 		
-		if((ICACHE_rdata[31:26] == 6'd4) && branch_prediction)begin
+		if((ICACHE_rdata[31:26] == 6'd4) && branch_enable && branch_prediction)begin
 		  	PCin_IF=beq_addr_IF;
 		end
 		else begin
@@ -383,23 +371,16 @@ module MIPS_Pipeline (
 
 		if(predict_miss)begin
 			ICACHE_addr_next_real=ICACHE_addr_next;
-			if((branch_prediction_ID) && !(R1_equal_R2) )
-				if ( (ICACHE_rdata[31:26] == 6'd2)  || (ICACHE_rdata[31:26] == 6'd3) ||  ( (ICACHE_rdata[31:26] == 6'd0) && (ICACHE_rdata[5:0] == 6'd8) ))
-					ID_FLUSH_next = 1'b1;
-				else
-					ID_FLUSH_next = 1'b1;
-			else
-				ID_FLUSH_next = 1'b1;
+			ID_FLUSH_next = 1'b1;
 		end
 		else begin
 		  	ICACHE_addr_next_real=PCin_IF;
 			ID_FLUSH_next = 1'b0;
 		end
-	end
 
 	
 	
-	always@(*)								//ID-PART   AND Sa
+	always@(*)										//ID-PART   AND Sa
 	begin
 		Read_register_1 = IR[25:21];
 		Read_register_2 = IR[20:16];
@@ -824,14 +805,13 @@ begin
 		all_time <= (stall || hazard_lw) ? all_time : (MemRead_MEM || MemWrite_MEM) ? all_time + 1'b1 : all_time;
 
 		Register[0] <= 32'b0;
-		beq_addr_ID <=(stall || hazard_lw) ? beq_addr_ID:beq_addr_IF;
 	
 		for (i=1;i<32;i=i+1)
 		Register[i] <= Register_next[i];
 
 		ICACHE_addr	<= (stall || hazard_lw) ? ICACHE_addr :  ICACHE_addr_next_real[31:2] ;
-		IR <= (stall || hazard_lw) ? IR :  (ID_FLUSH_next) ? 31'd0 : ICACHE_rdata[31:0];
-		PC_plus_4_next<=(stall || hazard_lw)?PC_plus_4_next:PC_plus_4;
+		IR <= (stall || hazard_lw) ? IR :  (ID_FLUSH_next) ? 32'd0 : ICACHE_rdata;
+		PC_plus_4_next<=PC_plus_4;
 		branch_prediction_ID<=branch_prediction;
 		IR_EX_5 <= (stall) ? IR_EX_5 : IR[5:0];	
 		Jump_EX <= (stall) ? Jump_EX :(hazard_lw) ? 1'b0 : Jump_ID;
@@ -928,7 +908,7 @@ module predict_unit(
         current_state <= next_state;
 
     always@(current_state or rst_n or predict_miss or branch_IF or stall)begin
-        if(~rst_n) begin
+        if(rst_n) begin
             next_state=`NOT_TAKEN_1;
             branch_prediction=0;  
         end
